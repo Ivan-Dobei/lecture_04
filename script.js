@@ -75,13 +75,8 @@ characterList.addEventListener('click', event => {
     item && modal(item);
 });
 
-modalCloseBtn.addEventListener('click', () => {
-    modalBackground.classList.add("hide");
-    body.classList.remove("overflow");
-});
-
 modalBackground.addEventListener('click', event => {
-    if (event.target === modalBackground) {
+    if (event.target === modalBackground || event.target === modalCloseBtn) {
         modalBackground.classList.add("hide");
         body.classList.remove("overflow");
     }
