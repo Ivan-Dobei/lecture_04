@@ -4,8 +4,9 @@ const modalLoading = document.querySelector('#modal_loading');
 const modalBackground = document.querySelector(".modal_background");
 const modalCloseBtn = document.querySelector(".modal_close_btn");
 const modalContent = document.querySelector('.modal');
-const modalImg = document.querySelector(".modal_img");
-const modalName = document.querySelector(".modal_name");
+const itemImg = document.querySelector(".modal__item_img");
+const itemName = document.querySelector(".modal__item_name");
+const itemStatus = document.querySelector(".modal__item_status");
 const url = 'https://rickandmortyapi.com/api/character';
 let nextPageUrl = url;
 
@@ -54,8 +55,9 @@ async function modal(id) {
         }
 
         const user = await response.json();
-        modalName.innerHTML = user.name;
-        modalImg.src = user.image;
+        itemName.innerHTML = user.name;
+        itemStatus.innerHTML = user.status;
+        itemImg.src = user.image;
 
     } catch (error) {
         console.error('Fetch error:', error);

@@ -150,10 +150,6 @@ body {
     transition: border-color ease-in-out 0.2s, box-shadow ease-in-out 0.3s;
 }
 
-.modal_name {
-    font-size: 26px;
-}
-
 .hide {
     display: none;
 }
@@ -164,6 +160,20 @@ body {
 
 .footer {
     padding: 50px 0;
+}
+
+.modal_text {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal__item_name {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.modal__item_status {
+    font-size: 14px;
 }
 
 .modal_loading_text {
