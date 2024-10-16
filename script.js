@@ -1,23 +1,17 @@
+const body = document.querySelector('#root');
 const characterList = document.querySelector(".character_list");
-const loadingTitle = document.querySelector('.loading_text');
-const previousBtn = document.querySelector(".previous_button");
-const nextBtn = document.querySelector(".next_button");
-const pagesCount = document.querySelector(".count_of_pages");
+const modalLoading = document.querySelector('#modal_loading');
 const modalBackground = document.querySelector(".modal_background");
 const modalCloseBtn = document.querySelector(".modal_close_btn");
+const modalContent = document.querySelector('.modal');
 const modalImg = document.querySelector(".modal_img");
 const modalName = document.querySelector(".modal_name");
 const url = 'https://rickandmortyapi.com/api/character';
-let nextPageUrl;
-let previousPageUrl;
-
-function getPageNumberFromUrl(url) {
-    let position = url.indexOf('=');
-    return parseInt(url.slice(position+1));
-}
+let nextPageUrl = url;
 
 function showCharacterList(data) {
     let characterItems = '';
+    console.log(data.results)
     data.results.forEach(character => {
         characterItems += `
         <li class="character_item" data-list=${character.id}>
@@ -25,38 +19,12 @@ function showCharacterList(data) {
             <h3 class="item_name text" data-list=${character.id}>${character.name}</h3>
             <p class="item_description text" data-list=${character.id}>${character.status}</p>
         </li>
-    `
-    })
-    characterList.innerHTML = characterItems;
-}
-
-function pagination (data) {
-    const pageNumber = data.info.next ? getPageNumberFromUrl(data.info.next) - 1 : data.info.pages;
-    pagesCount.innerHTML = `Page: ${pageNumber}`;
-
-    if (data.info.next) {
-        nextBtn.disabled = false;
-        nextPageUrl = data.info.next;
-        nextBtn.classList.remove("disabled_btn");
-    } else {
-        nextBtn.disabled = true;
-        nextBtn.classList.add("disabled_btn");
-    }
-
-    if (data.info.prev) {
-        previousBtn.disabled = false;
-        previousPageUrl = data.info.prev;
-        previousBtn.classList.remove("disabled_btn");
-    } else {
-        previousBtn.disabled = true;
-        previousBtn.classList.add("disabled_btn");
-    }
+    `;
+    });
+    characterList.innerHTML += characterItems;
 }
 
 async function fetchCharacters(url) {
-    characterList.classList.add("hide");
-    loadingTitle.classList.remove("hide");
-
     try {
         const response = await fetch(url);
 
@@ -66,18 +34,18 @@ async function fetchCharacters(url) {
 
         const data = await response.json();
         showCharacterList(data);
-        pagination(data);
+        nextPageUrl = data.info.next;
 
     } catch (error) {
         console.error('Fetch error:', error);
-    } finally {
-        loadingTitle.classList.add("hide");
-        characterList.classList.remove("hide");
     }
 }
 
 async function modal(id) {
     modalBackground.classList.remove("hide");
+    body.classList.add("overflow");
+    modalContent.classList.add("hide");
+    modalLoading.classList.remove("hide");
     try {
         const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`);
 
@@ -89,42 +57,39 @@ async function modal(id) {
         modalName.innerHTML = user.name;
         modalImg.src = user.image;
 
-
     } catch (error) {
         console.error('Fetch error:', error);
+    } finally {
+        modalContent.classList.remove("hide");
+        modalLoading.classList.add("hide");
     }
 }
 
-fetchCharacters(url)
-//fetchCharacter(url+'/2');
-/*
-nextBtn.addEventListener('click', () => {
-    if (nextPageUrl) {
-        fetchCharacters(nextPageUrl);
-    }
-});
-
-previousBtn.addEventListener('click', () => {
-    if (previousPageUrl) {
-        fetchCharacters(previousPageUrl);
-    }
-});
-*/
+fetchCharacters(url);
 
 characterList.addEventListener('click', event => {
     event.stopPropagation();
     const item = event.target.dataset.list;
     item && modal(item);
-})
+});
 
 modalCloseBtn.addEventListener('click', () => {
     modalBackground.classList.add("hide");
-    console.log()
-})
+    body.classList.remove("overflow");
+});
 
 modalBackground.addEventListener('click', event => {
-    let isBackground = event.target === modalBackground;
-    isBackground && modalBackground.classList.add("hide");
-})
+    if (event.target === modalBackground) {
+        modalBackground.classList.add("hide");
+        body.classList.remove("overflow");
+    }
+});
 
+window.addEventListener('scroll', () => {
+    let isEndOfScroll = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
+
+    if (isEndOfScroll) {
+        fetchCharacters(nextPageUrl);
+    }
+});
 

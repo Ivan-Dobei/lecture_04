@@ -15,7 +15,6 @@ body {
 
 .loading_text {
     font-size: 32px;
-    padding: 50px 0;
     text-align: center;
 }
 
@@ -46,7 +45,7 @@ body {
     width: 100%;
     max-width: 1024px;
     gap: 10px;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .character_item {
@@ -66,7 +65,7 @@ body {
 }
 
 .item_img {
-    max-width: 75px;
+    max-width: 85px;
     height: auto;
     display: block;
     border: none;
@@ -126,7 +125,7 @@ body {
 }
 
 .modal_background {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     right: 0;
@@ -157,6 +156,18 @@ body {
 
 .hide {
     display: none;
+}
+
+.overflow {
+    overflow: hidden;
+}
+
+.footer {
+    padding: 50px 0;
+}
+
+.modal_loading_text {
+    color: white;
 }
 
 @media (max-width: 768px) {
